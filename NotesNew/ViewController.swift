@@ -24,7 +24,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        // Do any additional setup after loading the view, typically from a nib.        
     }
     
     override func didReceiveMemoryWarning() {
@@ -52,6 +52,9 @@ class ViewController: UIViewController {
                 }
             }
         }
+        else{
+            createNote()
+        }
     }
     
     func createNote(){
@@ -63,13 +66,17 @@ class ViewController: UIViewController {
         let df = DateFormatter()
         df.dateStyle = .short
         df.timeStyle = .short
-        note._title = "My note on \(df.string(from: <#T##Date#>))"
+        note._title = "My note on \(df.string(from: Date()))"
         saveNote(note: note)
     }
     
-    func saveNote(note : Note){
-        
+    func saveNote(note: Note){
+        let dbObjMapper = AWSDynamoDBObjectMapper.default()
+        dbObjMapper.save(note){ (error) in
+            print (error?.localizedDescription ?? "no error")
+        }
     }
+
 
 }
 
